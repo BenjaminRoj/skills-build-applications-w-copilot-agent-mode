@@ -85,16 +85,6 @@ DATABASES = {
     }
 }
 
-# MongoDB connection using pymongo
-MONGO_DB_SETTINGS = {
-    'HOST': 'localhost',
-    'PORT': 27017,
-    'NAME': 'octofit_db',
-}
-
-MONGO_CLIENT = MongoClient(MONGO_DB_SETTINGS['HOST'], MONGO_DB_SETTINGS['PORT'])
-MONGO_DB = MONGO_CLIENT[MONGO_DB_SETTINGS['NAME']]
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
