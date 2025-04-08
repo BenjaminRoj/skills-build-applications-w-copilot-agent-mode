@@ -1,37 +1,28 @@
-from django.conf import settings
+from djongo import models
 
-class MongoDBModel:
-    def __init__(self, collection_name):
-        self.collection = settings.MONGO_DB[collection_name]
+class User(models.Model):
+    _id = models.ObjectIdField()
+    username = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=100)
 
-    def insert_one(self, data):
-        return self.collection.insert_one(data)
+class Team(models.Model):
+    _id = models.ObjectIdField()
+    name = models.CharField(max_length=100)
+    members = models.ArrayReferenceField(to=User, on_delete=models.CASCADE)
 
-    def find(self, query=None):
-        return self.collection.find(query or {})
+class Activity(models.Model):
+    _id = models.ObjectIdField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    activity_type = models.CharField(max_length=100)
+    duration = models.DurationField()
 
-    def update_one(self, query, update):
-        return self.collection.update_one(query, {'$set': update})
+class Leaderboard(models.Model):
+    _id = models.ObjectIdField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    score = models.IntegerField()
 
-    def delete_one(self, query):
-        return self.collection.delete_one(query)
-
-class User(MongoDBModel):
-    def __init__(self):
-        super().__init__('users')
-
-class Team(MongoDBModel):
-    def __init__(self):
-        super().__init__('teams')
-
-class Activity(MongoDBModel):
-    def __init__(self):
-        super().__init__('activities')
-
-class Leaderboard(MongoDBModel):
-    def __init__(self):
-        super().__init__('leaderboards')
-
-class Workout(MongoDBModel):
-    def __init__(self):
-        super().__init__('workouts')
+class Workout(models.Model):
+    _id = models.ObjectIdField()
+    name = models.CharField(max_length=100)
+    description = models.TextField()
